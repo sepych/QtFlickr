@@ -24,6 +24,7 @@
 #include <QtCore>
 
 class QtFlickrPrivate;
+class QNetworkAccessManager;
 
 /**
  * @struct QtfError
@@ -242,10 +243,13 @@ public:
      * @param apiKey Flickr api key
      * @param apiSecret Flickr api secret
      * @param parent object
+     * @param nam QNetworkAccessManager instance to use for networking requests
+     *          (If nam is 0 a new instance is created)
      */
     QtFlickr ( const QString &apiKey,
                const QString &apiSecret,
-               QObject *parent = 0 );
+               QObject *parent = 0,
+               QNetworkAccessManager *nam = 0 );
 
     ~QtFlickr();
 

@@ -23,9 +23,10 @@
 
 QtFlickr::QtFlickr ( const QString &apiKey,
                      const QString &apiSecret,
-                     QObject *parent )
+                     QObject *parent,
+                     QNetworkAccessManager *nam )
                          :QObject ( parent ),
-                         d(new QtFlickrPrivate(this))
+                         d( new QtFlickrPrivate( this, nam ) )
 {
     d->apiKey = apiKey;
     d->apiSecret = apiSecret;

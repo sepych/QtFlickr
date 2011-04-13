@@ -25,11 +25,15 @@
 #include <QCryptographicHash>
 #include "qtflickr.h"
 
-QtFlickrPrivate::QtFlickrPrivate( QtFlickr *parent )
+QtFlickrPrivate::QtFlickrPrivate( QtFlickr *parent, QNetworkAccessManager *nam )
     : p_ptr(parent),
     requestCounter(0)
 {
-    manager = new QNetworkAccessManager ( this );
+    if (nam) {
+        manager = nam;
+    } else {
+        manager = new QNetworkAccessManager ( this );
+    }
     connect ( manager, SIGNAL ( finished ( QNetworkReply* ) ),
               this, SLOT ( replyFinished ( QNetworkReply* ) ) );
 }
@@ -143,6 +147,12 @@ int QtFlickrPrivate::upload ( const QtfPhoto &photo,
 /******************************************************************/
 void QtFlickrPrivate::replyFinished ( QNetworkReply *reply )
 {
+    // Network access manager might be shared
+    // -> ignore requests from other users of the network access manager
+    if (!requestDataMap.contains(reply)) {
+        return;
+    }
+
     QByteArray data = reply->readAll();
     qDebug()<<"*******************************RESPONSE*******************************";
     qDebug()<<data;

@@ -36,7 +36,7 @@ class QtFlickrPrivate : public QObject
 {
     Q_OBJECT
 public:
-    QtFlickrPrivate( QtFlickr *parent );
+    QtFlickrPrivate( QtFlickr *parent , QNetworkAccessManager* nam = NULL );
     ~QtFlickrPrivate();
     QString token;
     QString apiKey;
