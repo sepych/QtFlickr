@@ -36,8 +36,8 @@ class FlickrPrivate;
 class QNetworkAccessManager;
 
 /**
- * @class QtFlickr
- * Main class of QtFlickr APi<br>
+ * @class Flickr
+ * Main class of Flickr API<br>
  * Authorization example:
  * @code
  * UIClass::UIClass
@@ -106,8 +106,7 @@ public:
      */
     Flickr(const QString &apiKey,
            const QString &apiSecret,
-           QObject *parent = 0,
-           QNetworkAccessManager *nam = 0);
+           QObject *parent = 0);
 
     ~Flickr();
 

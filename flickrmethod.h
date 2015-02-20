@@ -27,16 +27,16 @@
 #include <QMap>
 
 /**
- * @struct QtfMethod
+ * @struct FlickrMethod
  * Use this structure to create method for accessing Flickr API<br>
  * Example:
  * @code
- * QtfMethod method;
+ * FlickrMethod method;
  * method.method = "flickr.photos.comments.addComment";
  * method.args.insert("photo_id","87243209893");
  * method.args.insert("comment_text","This comment was added through QtFlickr library :) ");
  *
- * QtFlickr qtFlickr("apiKey","apiSecret");
+ * Flickr qtFlickr("apiKey","apiSecret");
  * qtFlickr.get(method);
  * @endcode
  * <b><i>Note: You don't have to provide api_key as argument.</i></b>

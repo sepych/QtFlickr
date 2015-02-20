@@ -27,7 +27,7 @@
 #include <QMap>
 
 /**
- * @struct QtfRequest
+ * @struct FlickrRequest
  * Use this structure to provide information for the XML parser, parser will
  * search only those tags that you have been provided. Request is map container,
  * where key is a tag name and value is a comma delimited list of possible attributes.<br>
@@ -45,13 +45,13 @@
  * Let assume server response is a XML above and you want to get all id's and owner information for the
  * photo list. The code will look like this:
  * @code
- * QtfRequest request;
+ * FlickrRequest request;
  * request.requests.insert("photo","id,owner");
  *
- * QtfMethod method;
+ * FlickrMethod method;
  * method.method = "flickr.photos.getWithGeoData";
  *
- * QtFlickr qtFlickr("apiKey","apiSecret");
+ * Flickr qtFlickr("apiKey","apiSecret");
  * qtFlickr.get(method, request);
  * @endcode
  */

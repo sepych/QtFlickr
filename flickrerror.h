@@ -26,7 +26,7 @@
 #include <QString>
 
 /**
- * @struct QtfError
+ * @struct FlickrError
  * Flickr errors. Find more about flickr errors at http://www.flickr.com/services/api/
  * error codes:<br>
  * <ul><li>0 - No errors</li>
