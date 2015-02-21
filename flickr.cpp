@@ -26,14 +26,12 @@
 
 Flickr::Flickr(const QString &apiKey,
                const QString &apiSecret,
-               QObject *parent,
-               QNetworkAccessManager *nam) :
+               QObject *parent) :
     QObject(parent),
-    d( new FlickrPrivate( this, nam)) {
+    d(new FlickrPrivate(this)) {
     d->_apiKey = apiKey;
     d->_apiSecret = apiSecret;
 }
-
 
 Flickr::~Flickr() {
     delete d;

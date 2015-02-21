@@ -27,8 +27,8 @@
 #include <QMap>
 
 /**
-  * @struct QtfTag
-  * Holds response data, see QtfResponse
+  * @struct FlickrTag
+  * Holds response data, see FlickrResponse
   */
 struct FlickrTag {
     QString value;

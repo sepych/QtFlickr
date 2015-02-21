@@ -35,8 +35,7 @@ class QNetworkReply;
 class FlickrPrivate : public QObject {
     Q_OBJECT
 public:
-    FlickrPrivate(Flickr *parent,
-                  QNetworkAccessManager* networkAccessManager = 0);
+    FlickrPrivate(Flickr *parent);
     ~FlickrPrivate();
 
 

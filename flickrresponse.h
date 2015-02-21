@@ -29,7 +29,7 @@
 #include <QMultiMap>
 
 /**
- * @struct QtfResponse
+ * @struct FlickrResponse
  * Structure holds data from XML parser.
  * it will includes only those values that has been setted with the QtfRequest structure<br>
  * Example:

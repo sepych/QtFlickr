@@ -27,7 +27,7 @@
 #include <QMap>
 
 /**
- * @struct QtfPhoto
+ * @struct FlickrPhoto
  * This structure is used when uploading or replacing photos.
  * @param file File to be uploaded
  * @param photoId The ID of the photo to replace, do not set this
@@ -35,11 +35,12 @@
  * @param args Optional arguments, for example "title"
  * Example:
  * @code
- * QtfPhoto photo;
+ *
+ * FlickrPhoto photo;
  * photo.file = "/home/user/picture.png";
  * photo.args.insert("title", "Greatest pic of all time!");
  *
- * QtFlickr qtFlickr("apiKey","apiSecret");
+ * Flickr qtFlickr("apiKey","apiSecret");
  * //uploading requires authentication
  * ... (missing code here)
  *

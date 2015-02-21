@@ -30,15 +30,10 @@
 #include <QNetworkRequest>
 #include <QCryptographicHash>
 
-FlickrPrivate::FlickrPrivate(Flickr *parent,
-                             QNetworkAccessManager *networkAccessManager) :
+FlickrPrivate::FlickrPrivate(Flickr *parent) :
+    _networkAccessManager(new QNetworkAccessManager(this)),
     _p(parent),
     _requestCounter(0) {
-    if (networkAccessManager) {
-        _networkAccessManager = networkAccessManager;
-    } else {
-        _networkAccessManager = new QNetworkAccessManager(this);
-    }
     connect(_networkAccessManager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 }
@@ -47,13 +42,26 @@ FlickrPrivate::~FlickrPrivate() {
 }
 
 
-QUrl FlickrPrivate::authorizationUrl(const QString &frob, const QString &perms) {
+QUrl FlickrPrivate::authorizationUrl(const QString &frob,
+                                     const QString &perms) {
     QString authUrl;
-    QString apiSig = _apiSecret+"api_key"+_apiKey+"frob"+frob+"perms"+perms;
+    QString apiSig = _apiSecret
+            + "api_key"
+            + _apiKey
+            + "frob"
+            + frob
+            + "perms"
+            + perms;
 
     apiSig = md5(apiSig);
-    authUrl = "http://flickr.com/services/auth/?api_key="+_apiKey+
-            "&perms="+perms+"&frob="+frob+"&api_sig="+apiSig;
+    authUrl = "http://flickr.com/services/auth/?api_key="
+            + _apiKey
+            + "&perms="
+            + perms
+            + "&frob="
+            + frob
+            + "&api_sig="
+            + apiSig;
 
     return QUrl(authUrl);
 }
@@ -147,21 +155,16 @@ void FlickrPrivate::replyFinished(QNetworkReply *reply) {
     }
 
     QByteArray data = reply->readAll();
-    qDebug()<<"*******************************RESPONSE*******************************";
-    qDebug()<<data;
-    qDebug()<<"**********************************************************************\n\n";
+    qDebug() << "Flickr response: " << data;
 
     _flickrResponse.tags.clear();
     _flickrError.code = 0;
     _flickrError.message = "No Errors";
 
-    if(reply->error() != QNetworkReply::NoError)
-    {
+    if(reply->error() != QNetworkReply::NoError) {
         _flickrError.code = 1001;
         _flickrError.message = reply->errorString ();
-    }
-    else
-    {
+    } else {
         parse(data, "rsp" , requestDataMap.value(reply).request);
     }
 
@@ -169,15 +172,19 @@ void FlickrPrivate::replyFinished(QNetworkReply *reply) {
     int replyId = requestDataMap.value(reply).requestId;
 
     requestDataMap.remove(reply);
-    emit _p->requestFinished(replyId, _flickrResponse, _flickrError, userData);
+    emit _p->requestFinished(replyId,
+                             _flickrResponse,
+                             _flickrError,
+                             userData);
 }
 
 void FlickrPrivate::uploadProgress(qint64 bytesSent, qint64 bytesTotal) {
     int percent;
-    if(bytesTotal != -1)
+    if(bytesTotal != -1) {
         percent = qRound(( qreal) bytesSent/(qreal) bytesTotal*100);
-    else
+    } else {
         percent = -1;
+    }
 
     emit _p->uploadProgress(percent);
 }
@@ -187,7 +194,7 @@ QByteArray FlickrPrivate::generateBoundary() {
     QChar unicode[lenght];
     for(int i = 0; i < lenght; ++i) {
         int sel = qrand() % 2;
-        int temp =(sel) ? qrand() % 9 + 49 : qrand() % 23 + 98;
+        int temp = (sel) ? qrand() % 9 + 49 : qrand() % 23 + 98;
         unicode[i] = QChar(temp);
     }
 
@@ -221,7 +228,6 @@ QByteArray FlickrPrivate::constructField(QString name,
     return data;
 }
 
-
 int FlickrPrivate::request(const FlickrMethod &method,
                            const FlickrRequest &request,
                            bool get,
@@ -243,13 +249,16 @@ int FlickrPrivate::request(const FlickrMethod &method,
 
     QString apiSig(_apiSecret);
 
-    QUrlQuery urlQuery (QUrl("http://www.flickr.com/services/rest/", QUrl::TolerantMode));
+    QUrl url = QUrl("https://www.flickr.com/services/rest/");
+
+    QUrlQuery urlQuery;
     for(int i = 0; i < keyList.size(); ++i) {
         apiSig.append(keyList.at(i) + map.value(keyList.at(i)));
         urlQuery.addQueryItem(keyList.at(i),  map.value(keyList.at(i)));
     }
 
-    urlQuery.addQueryItem("api_sig",  md5(apiSig));
+    urlQuery.addQueryItem("api_sig", md5(apiSig));
+    url.setQuery(urlQuery);
 
     _requestCounter++;
     RequestData requestData;
@@ -259,9 +268,10 @@ int FlickrPrivate::request(const FlickrMethod &method,
 
     QNetworkReply *reply;
     if(!get) {
-        reply = _networkAccessManager->post(QNetworkRequest(QUrl("http://www.flickr.com/services/rest/")), urlQuery.query().toUtf8());
+        reply = _networkAccessManager->post(QNetworkRequest(QUrl("https://www.flickr.com/services/rest/")),
+                                            url.toEncoded(QUrl::RemoveFragment));
     } else {
-        reply = _networkAccessManager->get(QNetworkRequest(urlQuery.query()));
+        reply = _networkAccessManager->get(QNetworkRequest(url));
     }
 
     requestDataMap.insert(reply,requestData);
